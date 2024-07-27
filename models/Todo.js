@@ -1,7 +1,6 @@
 const Sequelize = require('sequelize');
-const { sqlize } = require("../config/dbconfig");
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('Todo', {
+  return sequelize.define('todo', {
     id: {
       autoIncrement: true,
       type: DataTypes.INTEGER,

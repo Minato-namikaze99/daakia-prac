@@ -1,6 +1,6 @@
 const express = require('express');
 const { sqlize } = require('./config/dbconfig')
-const todoRoutes = require("./routes");
+const routes = require("./routes");
 const bodyParser = require("body-parser");
 
 const port = process.env.PORT || 15000; //setting up the port of the app
@@ -13,7 +13,7 @@ app.get('/', (req, res, next)=>{
     res.status(200).json({message:"Welcome to root URL of the app"}); //added an home URL to check if things are working fine or not
 });
 
-app.use("/user", todoRoutes);  //added "/user" to get a better idea of what kind of app this is
+app.use(routes);
 
 app.all("*", (req, res, next)=>{
     res.status(404).json({message:"Invalid URL"}); //to display the users a message when they type in a wrong url
