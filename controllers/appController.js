@@ -15,8 +15,8 @@ module.exports = {
     const userDetails = req.body;
 
     const user = await models.User.findOne({
+      attributes: ['id'],
       where: {
-        name: userDetails.name,
         country_code: userDetails.country_code,
         phone_number: userDetails.phone_number,
       },
@@ -42,6 +42,7 @@ module.exports = {
     const userDetails = req.body;
 
     models.User.findOne({
+      attributes: ['id'],
       where: {
         country_code: userDetails.country_code,
         phone_number: userDetails.phone_number,
