@@ -12,26 +12,6 @@ const models = initModels(sqlize);
 
 module.exports = {
   login: async (req, res) => {
-    const schema = Joi.object({
-      country_code: Joi.string()
-        .pattern(new RegExp("^[0-9]+$"))
-        .min(1)
-        .max(6)
-        .required(),
-      phone_number: Joi.string()
-        .pattern(new RegExp("^[0-9]+$"))
-        .min(8)
-        .max(12)
-        .required(),
-      name: Joi.string().max(100).required(),
-    });
-
-    let validationError = schema.validate(req.body);
-
-    if (validationError.error && validationError.error !== null) {
-      return res.status(400).json(validationError.error);
-    }
-
     const userDetails = req.body;
 
     const user = await models.User.findOne({
@@ -59,29 +39,6 @@ module.exports = {
       .json({ message: "Login successful!", accessToken: accessToken });
   },
   register: async (req, res) => {
-    const schema = Joi.object({
-      country_code: Joi.string()
-        .pattern(new RegExp("^[0-9]+$"))
-        .min(1)
-        .max(6)
-        .required(),
-      phone_number: Joi.string()
-        .pattern(new RegExp("^[0-9]+$"))
-        .min(8)
-        .max(12)
-        .required(),
-      name: Joi.string().max(100).required(),
-      address: Joi.string().max(200).required(),
-      dob: Joi.date().required(),
-      gender: Joi.string().max(50).required(),
-    });
-
-    let validationError = schema.validate(req.body);
-
-    if (validationError.error && validationError.error !== null) {
-      return res.status(400).json(validationError.error);
-    }
-
     const userDetails = req.body;
 
     models.User.findOne({
@@ -117,17 +74,6 @@ module.exports = {
 
   createTodo: async (req, res) => {
     try {
-      let schema = Joi.object({
-        title: Joi.string().pattern(new RegExp("[a-zA-Z0-9s]")).required(),
-        status: Joi.boolean().required(),
-      });
-
-      let validationError = schema.validate(req.body);
-
-      if (validationError.error && validationError.error !== null) {
-        return res.status(400).json(validationError.error);
-      }
-
       const todo = req.body;
       const currentUser = req.user;
 
@@ -176,16 +122,6 @@ module.exports = {
   },
   markTodoAsDone: async (req, res) => {
     try {
-      let schema = Joi.object({
-        todoId: Joi.number().required(),
-      });
-
-      let validationError = schema.validate(req.params);
-
-      if (validationError.error && validationError.error !== null) {
-        return res.status(400).json(validationError.error);
-      }
-
       const todoID = req.params.todoId;
       const currentUser = req.user;
 
@@ -221,16 +157,6 @@ module.exports = {
   },
   deleteTodoByID: async (req, res) => {
     try {
-      let schema = Joi.object({
-        todoId: Joi.number().required(),
-      });
-
-      let validationError = schema.validate(req.params);
-
-      if (validationError.error && validationError.error !== null) {
-        return res.status(400).json(validationError.error);
-      }
-
       const todoID = req.params.todoId;
       const currentUser = req.user;
 

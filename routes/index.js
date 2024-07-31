@@ -1,3 +1,4 @@
 module.exports = [].concat(
-    require("./todoapp"),
+    require("./auth"),
+    require("./todo"),
 )

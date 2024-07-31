@@ -5,6 +5,7 @@ module.exports = {
     return jwt.sign(user, process.env.secret_key, { expiresIn: '1y'});
   },
   authenticateToken: async (req, res, next) => {
+    console.log("authorization");
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
     if (token == null)
