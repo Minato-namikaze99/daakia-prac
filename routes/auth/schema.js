@@ -1,11 +1,8 @@
 const Joi = require("joi");
 
 exports.loginUser = Joi.object({
-  country_code: Joi.string()
-    .pattern(new RegExp("^[0-9]+$"))
-    .min(1)
-    .max(6)
-    .required(),
+  name: Joi.string().max(100).required(),
+  password: Joi.string().max(100).required(),
   phone_number: Joi.string()
     .pattern(new RegExp("^[0-9]+$"))
     .min(8)
@@ -28,4 +25,5 @@ exports.registerUser = Joi.object({
   address: Joi.string().max(200).required(),
   dob: Joi.date().required(),
   gender: Joi.string().max(50).required(),
+  password: Joi.string().max(100).required(),
 });

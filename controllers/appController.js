@@ -4,6 +4,7 @@ const initModels = require("../models/init-models").initModels;
 const { Sequelize, where } = require("sequelize");
 const { sqlize } = require("../config/dbconfig");
 const { generateAccessToken } = require("../middleware/jwtAuth");
+const crypto = require('crypto');
 
 // User.hasMany(models.Todo);
 // models.Todo.belongsTo(User);
@@ -15,9 +16,9 @@ module.exports = {
     const userDetails = req.body;
 
     const user = await models.User.findOne({
-      attributes: ['id'],
+      attributes: ['id', 'salt', 'hash'],
       where: {
-        country_code: userDetails.country_code,
+        name: userDetails.name,
         phone_number: userDetails.phone_number,
       },
     });
@@ -27,6 +28,13 @@ module.exports = {
         .status(403)
         .json({ message: "User with these credentials does not exist" });
     }
+
+    const newHash = crypto.pbkdf2Sync(userDetails.password, user.salt, 10000, 16, 'sha512').toString('hex');
+
+    if (newHash !== user.hash)
+      return res
+        .status(403)
+        .json({ message: "Wrong password!" });
 
     const accessUser = {
       id: user.id,
@@ -52,6 +60,12 @@ module.exports = {
         if (user) {
           return res.status(409).json({ message: "User already exists!" });
         } else {
+          const _salt = crypto.randomBytes(8).toString('hex');
+          const _hash = crypto.pbkdf2Sync(userDetails.password, _salt, 10000, 16, 'sha512').toString('hex');
+          
+          console.log(_salt);
+          console.log(_hash);
+
           models.User.create({
             country_code: userDetails.country_code,
             phone_number: userDetails.phone_number,
@@ -59,6 +73,8 @@ module.exports = {
             address: userDetails.address,
             dob: userDetails.dob,
             gender: userDetails.gender,
+            salt: _salt,
+            hash: _hash,
           })
             .then(() => {
               return res.status(201).json({ message: "New user created!" });
